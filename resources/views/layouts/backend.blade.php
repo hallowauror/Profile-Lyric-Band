@@ -22,6 +22,7 @@
                 <x-sidebar></x-sidebar>
             </div>
             <div class="col-md-9">
+                @include('alert')
                 @yield('content')
             </div>
         </div>

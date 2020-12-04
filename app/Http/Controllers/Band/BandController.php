@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Band;
 
 use App\Http\Controllers\Controller;
-use App\Models\Genre;
-use App\Models\Band;
+use App\Http\Requests\Band\BandRequest;
+use App\Models\{Genre, Band};
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +15,7 @@ class BandController extends Controller
     {
         return view('bands.table', [
             'bands' => Band::latest()->paginate(16),
+            'title' => 'All Bands'
         ]);
     }
 
@@ -22,20 +23,17 @@ class BandController extends Controller
     {
         return view('bands.create', [
             'genres' => Genre::get(),
+            'band' => new Band,
+            'submitLabel' => 'Create'
         ]);
     }
 
-    public function store()
+    public function store(BandRequest $request)
     {
         // dd('berhasil gan');
-        request()->validate([
-            'name' => 'required|unique:bands,name',
-            'thumbnail' => request('thumbnail') ? 'image|mimes:png,jpeg,jpg,gif' : '',
-            'genres' => 'required|array'
-        ]);
 
         $band = Band::create([
-            'name' => request('name'),
+            'name' => $request->name,
             'slug' => Str::slug(request('name')),
             'thumbnail' => request('thumbnail') ? request()->file('thumbnail')->store('images/band') : null,
         ]);
@@ -50,17 +48,13 @@ class BandController extends Controller
         return view('bands.edit', [
             'band' => $band,
             'genres' => Genre::get(),
+            'submitLabel' => 'Update'
         ]);
     }
 
-    public function update(Band $band)
+    public function update(Band $band, BandRequest $request)
     {
         // dd('berhasil gan');
-        request()->validate([
-            'name' => 'required|unique:bands,name,' . $band->id,
-            'thumbnail' => request('thumbnail') ? 'image|mimes:png,jpeg,jpg,gif' : '',
-            'genres' => 'required|array'
-        ]);
 
         if(request('thumbnail')){
             Storage::delete($band->thumbnail);
@@ -79,13 +73,14 @@ class BandController extends Controller
 
         $band->genres()->sync(request('genres'));
 
-        return back()->with('success', 'Band Updated!');
+        return redirect()->route('bands.table')->with('success', 'Band Updated!');
     }
 
     public function destroy(Band $band)
     {
         Storage::delete($band->thumbnail);
         $band->genres()->detach();
+        $band->albums()->delete();
         $band->delete();
     }
 }

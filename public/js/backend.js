@@ -55044,13 +55044,13 @@ function Delete(props) {
     console.log(afterDeleted);
     sweetalert__WEBPACK_IMPORTED_MODULE_3___default()({
       title: "Are you sure?",
-      text: "Image will deleted permanently!",
+      text: "Data will deleted permanently!",
       icon: "warning",
       buttons: true,
       dangerMode: true
     }).then(function (value) {
       if (value == true) {
-        sweetalert__WEBPACK_IMPORTED_MODULE_3___default()("Your image has been deleted!", {
+        sweetalert__WEBPACK_IMPORTED_MODULE_3___default()("Your data has been deleted!", {
           icon: "success"
         });
         axios["delete"](props.endpoint).then(function (response) {
@@ -55064,7 +55064,7 @@ function Delete(props) {
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
     onClick: destroy,
-    className: "btn btn-danger"
+    className: "btn btn-danger btn-sm"
   }, "Delete");
 }
 

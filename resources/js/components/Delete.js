@@ -9,13 +9,13 @@ function Delete(props) {
         console.log(afterDeleted);
         swal({
             title: "Are you sure?",
-            text: "Image will deleted permanently!",
+            text: "Data will deleted permanently!",
             icon: "warning",
             buttons: true,
             dangerMode: true,
         }).then((value) => {
             if(value == true){
-                swal("Your image has been deleted!", {
+                swal("Your data has been deleted!", {
                     icon: "success",
                 });
                 axios.delete(props.endpoint).then((response) => {
@@ -27,7 +27,7 @@ function Delete(props) {
         });
         }
     return (
-        <button onClick={destroy} className="btn btn-danger">Delete</button>
+        <button onClick={destroy} className="btn btn-danger btn-sm">Delete</button>
     );
 }
 
